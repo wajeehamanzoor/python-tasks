@@ -116,7 +116,7 @@ def main():
     totalTeams = len(team_info)
     print("\nTotal Number of Teams are: ", totalTeams)
     print("\nTotal Sum of Fees is: ", totalFees(totalTeams))
-    print("\nTotal percentage is: ", nonPaidTeamsPercent(totalTeams))
+    print("\nTotal percentage of Unpaid Teams : ", nonPaidTeamsPercent(totalTeams))
     main()
 
 

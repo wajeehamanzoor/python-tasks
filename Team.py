@@ -1,6 +1,5 @@
 class Team:
 
-    #class attribute
     fee = 1000
     # Initializer / Instance Attributes
     def __init__(self, name, city, is_paid, num_players):
