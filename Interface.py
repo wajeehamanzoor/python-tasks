@@ -1,11 +1,13 @@
 from collections import namedtuple
 from datetime import date
+import sys
+import ast
 from tokenize import String
 from xmlrpc.client import Boolean
 
 from Team import Team
 
-#this is code
+
 class Menu:
     global team_info
     global team_data
@@ -18,7 +20,7 @@ class Menu:
                 5: Option("Exit")}
 
     def print_header(self):
-        print("{0}\n Please Select An Option\n{0}\n".format(self._separator))
+        print("{0}\n Please Select An Option\n{0}".format(self._separator))
 
     def print_mainMenu(self):
         self.print_header()
@@ -33,6 +35,10 @@ class Menu:
         else:
             print('Enter Valid Option')
 
+    def write_to_file(self):
+        f = open("Teams.txt", "w")
+        f.write(str(team_info))
+        f.close()
 
     def handle_input(self, chosen_option):
         try:
@@ -43,7 +49,14 @@ class Menu:
                     if entry == 'Enter City Name: ':
                         team_info[team_name][entry] = input(entry)
                     elif entry == 'Fee Paid? [yes/no]':
-                        team_info[team_name][entry] = input(entry)
+                        fee_paid = input(entry)
+                        if fee_paid.lower() == 'no':
+                            team_info[team_name][entry] = fee_paid.lower()
+                        elif fee_paid.lower() == 'yes':
+                            team_info[team_name][entry] = fee_paid.lower()
+                        else:
+                            print('You Entered Wrong Value')
+                            main()
                     elif entry == 'Number of Players: ':
                         team_info[team_name][entry] = int(input(entry))
                     elif entry == 'Date of Registry:':
@@ -62,9 +75,9 @@ class Menu:
                             date_two = date.today()
                             delta = date_two - date_one
                             print("Team Registered " + str(delta.days) + " days ago.")
-                            break
                     else:
                         print("Team Does Not Exist")
+                    break
             if chosen_option == 3:
                 name = input("Enter Team Name You Want To Update: ")
                 for k, v in team_info.items():
@@ -72,10 +85,9 @@ class Menu:
                         team_info[k]['Enter City Name: '] = input('Enter City: ')
                         team_info[k]['Fee Paid? [yes/no]'] = input('Fee paid ?')
                         team_info[k]['Number of Players: '] = input('Enter Players: ')
-                        break
                     else:
                         print("Team Does Not Exist")
-
+                    break
                 main()
             if chosen_option == 4:
                 name = input("Enter Team Name You Want To Delete: ")
@@ -86,6 +98,10 @@ class Menu:
                             del team_info[k]
                 else:
                     print("Team Does Not Exist")
+            if chosen_option == 5:
+                self.write_to_file()
+                sys.exit()
+
         except KeyError:
             print("Wrong Option")
 
@@ -98,14 +114,18 @@ def totalFees(n):
                 count = count + 1
     return count * Team.fee
 
+
 def nonPaidTeamsPercent(n):
     count = 0
     for k, v in team_info.items():
         for x, z in v.items():
             if z == 'no':
                 count = count + 1
-    percentage = (count / n) * 100
-    return percentage
+    try:
+        percentage = (count / n) * 100
+    except ZeroDivisionError:
+        percentage = 0
+    return str(percentage) + ' %'
 
 
 def main():
@@ -122,5 +142,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-#this is end code
