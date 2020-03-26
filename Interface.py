@@ -7,6 +7,27 @@ from xmlrpc.client import Boolean
 
 from Team import Team
 
+def totalFees(n):
+    count = 0
+    for k, v in team_info.items():
+        for x, z in v.items():
+            if z == 'yes':
+                count = count + 1
+    return count * Team.fee
+
+
+def nonPaidTeamsPercent(n):
+    count = 0
+    for k, v in team_info.items():
+        for x, z in v.items():
+            if z == 'no':
+                count = count + 1
+    try:
+        percentage = (count / n) * 100
+    except ZeroDivisionError:
+        percentage = 0
+    return str(percentage) + ' %'
+
 
 class Menu:
     global team_info
@@ -23,6 +44,10 @@ class Menu:
         print("{0}\n Please Select An Option\n{0}".format(self._separator))
 
     def print_mainMenu(self):
+        totalTeams = len(team_info)
+        print("\nTotal Number of Teams are: ", totalTeams)
+        print("\nTotal Sum of Fees is: ", totalFees(totalTeams))
+        print("\nTotal percentage of Unpaid Teams : ", nonPaidTeamsPercent(totalTeams),"\n")
         self.print_header()
         for option in sorted(self._options.keys()):
             print("{0} {1}".format(option, self._options[option].label))
@@ -61,7 +86,6 @@ class Menu:
                         team_info[team_name][entry] = int(input(entry))
                     elif entry == 'Date of Registry:':
                         team_info[team_name][entry] = date.today()
-                print(team_info)
 
             if chosen_option == 2:
                 name = input("Enter Team Name: ")
@@ -75,15 +99,24 @@ class Menu:
                             date_two = date.today()
                             delta = date_two - date_one
                             print("Team Registered " + str(delta.days) + " days ago.")
+                            break
                     else:
                         print("Team Does Not Exist")
                     break
+                main()
             if chosen_option == 3:
                 name = input("Enter Team Name You Want To Update: ")
                 for k, v in team_info.items():
                     if name == k:
                         team_info[k]['Enter City Name: '] = input('Enter City: ')
-                        team_info[k]['Fee Paid? [yes/no]'] = input('Fee paid ?')
+                        fee_paid = input('Fee paid ?')
+                        if fee_paid.lower() == 'no':
+                            team_info[k]['Fee Paid? [yes/no]'] = fee_paid.lower()
+                        elif fee_paid.lower() == 'yes':
+                            team_info[k]['Fee Paid? [yes/no]'] = fee_paid.lower()
+                        else:
+                            print('You Entered Wrong Value')
+                            main()
                         team_info[k]['Number of Players: '] = input('Enter Players: ')
                     else:
                         print("Team Does Not Exist")
@@ -106,26 +139,7 @@ class Menu:
             print("Wrong Option")
 
 
-def totalFees(n):
-    count = 0
-    for k, v in team_info.items():
-        for x, z in v.items():
-            if z == 'yes':
-                count = count + 1
-    return count * Team.fee
 
-
-def nonPaidTeamsPercent(n):
-    count = 0
-    for k, v in team_info.items():
-        for x, z in v.items():
-            if z == 'no':
-                count = count + 1
-    try:
-        percentage = (count / n) * 100
-    except ZeroDivisionError:
-        percentage = 0
-    return str(percentage) + ' %'
 
 
 def main():
@@ -133,10 +147,8 @@ def main():
     menu.print_mainMenu()
     menu.handle_input(menu.prompt())
 
-    totalTeams = len(team_info)
-    print("\nTotal Number of Teams are: ", totalTeams)
-    print("\nTotal Sum of Fees is: ", totalFees(totalTeams))
-    print("\nTotal percentage of Unpaid Teams : ", nonPaidTeamsPercent(totalTeams))
+
+
     main()
 
 

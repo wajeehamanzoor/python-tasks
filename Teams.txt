@@ -1,1 +1,0 @@
-{'fgh': {'Enter City Name: ': 'mkl', 'Fee Paid? [yes/no]': 'no', 'Number of Players: ': 11, 'Date of Registry:': datetime.date(2020, 3, 26)}}
